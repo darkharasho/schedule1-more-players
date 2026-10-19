@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2c3a2f"/>
+      <stop offset="1" stop-color="#141a16"/>
+    </linearGradient>
+    <linearGradient id="badge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd84a"/>
+      <stop offset="1" stop-color="#e09a12"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="36" fill="url(#bg)"/>
+  <!-- players: back row -->
+  <g fill="#4f8f5a">
+    <circle cx="70" cy="86" r="22"/><path d="M34 160 Q34 116 70 116 Q106 116 106 160 Z"/>
+    <circle cx="150" cy="86" r="22"/><path d="M114 160 Q114 116 150 116 Q186 116 186 160 Z"/>
+  </g>
+  <!-- players: front row -->
+  <g fill="#7fd08a">
+    <circle cx="110" cy="122" r="26"/><path d="M66 212 Q66 156 110 156 Q154 156 154 212 Z"/>
+  </g>
+  <!-- player-count badge -->
+  <circle cx="190" cy="182" r="50" fill="#15171a"/>
+  <circle cx="190" cy="182" r="44" fill="url(#badge)"/>
+  <text x="190" y="200" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-weight="bold" font-size="54" fill="#1c1f22">8</text>
+</svg>

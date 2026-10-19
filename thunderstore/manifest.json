@@ -1,0 +1,9 @@
+{
+    "name": "ScheduleOneMorePlayers",
+    "version_number": "0.1.0",
+    "website_url": "https://github.com/darkharasho/schedule1-more-players",
+    "description": "Raises Schedule I's co-op lobby cap from 4 to 8 players (configurable up to 250). Everyone in the lobby needs it.",
+    "dependencies": [
+        "LavaGang-MelonLoader-0.7.3"
+    ]
+}

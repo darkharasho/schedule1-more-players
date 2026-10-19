@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>MorePlayers</AssemblyName>
+    <RootNamespace>MorePlayers</RootNamespace>
+    <Version>0.1.0</Version>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <!-- Machine-specific paths. Override in Local.props (gitignored) or with -p:ProfilePath=... -->
+  <Import Project="$(MSBuildThisFileDirectory)../../Local.props" Condition="Exists('$(MSBuildThisFileDirectory)../../Local.props')" />
+
+  <PropertyGroup>
+    <ProfilePath Condition="'$(ProfilePath)' == ''">$(HOME)/.config/r2modmanPlus-local/ScheduleI/profiles/Co-op playthrough</ProfilePath>
+    <MelonLoaderPath>$(ProfilePath)/MelonLoader/net6</MelonLoaderPath>
+    <!-- MelonLoader writes the interop assemblies here the first time the game starts with it. -->
+    <InteropPath>$(ProfilePath)/MelonLoader/Il2CppAssemblies</InteropPath>
+    <DeployPath>$(ProfilePath)/Mods/darkharasho-ScheduleOneMorePlayers</DeployPath>
+  </PropertyGroup>
+
+  <!-- Without the game set up (CI), or with -p:UseRefs=true, build against the reference assemblies from
+       scripts/update-refs.sh. -->
+  <PropertyGroup Condition="'$(UseRefs)' == 'true' Or !Exists('$(InteropPath)/Assembly-CSharp.dll')">
+    <InteropPath>$(MSBuildThisFileDirectory)../../lib/refs</InteropPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(UseRefs)' == 'true' Or !Exists('$(MelonLoaderPath)/MelonLoader.dll')">
+    <MelonLoaderPath>$(MSBuildThisFileDirectory)../../lib/refs</MelonLoaderPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="MelonLoader" HintPath="$(MelonLoaderPath)/MelonLoader.dll" Private="false" />
+    <Reference Include="0Harmony" HintPath="$(MelonLoaderPath)/0Harmony.dll" Private="false" />
+    <Reference Include="Il2CppInterop.Runtime" HintPath="$(MelonLoaderPath)/Il2CppInterop.Runtime.dll" Private="false" />
+    <Reference Include="Il2CppInterop.Common" HintPath="$(MelonLoaderPath)/Il2CppInterop.Common.dll" Private="false" />
+    <Reference Include="Il2Cppmscorlib" HintPath="$(InteropPath)/Il2Cppmscorlib.dll" Private="false" />
+    <Reference Include="Assembly-CSharp" HintPath="$(InteropPath)/Assembly-CSharp.dll" Private="false" />
+    <Reference Include="Il2Cppcom.rlabrecque.steamworks.net" HintPath="$(InteropPath)/Il2Cppcom.rlabrecque.steamworks.net.dll" Private="false" />
+    <Reference Include="Il2CppFishNet.Runtime" HintPath="$(InteropPath)/Il2CppFishNet.Runtime.dll" Private="false" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="$(InteropPath)/UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="UnityEngine.UI" HintPath="$(InteropPath)/UnityEngine.UI.dll" Private="false" />
+    <Reference Include="Unity.TextMeshPro" HintPath="$(InteropPath)/Unity.TextMeshPro.dll" Private="false" />
+  </ItemGroup>
+
+  <Target Name="DeployToProfile" AfterTargets="Build" Condition="Exists('$(ProfilePath)/Mods')">
+    <MakeDir Directories="$(DeployPath)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(DeployPath)" />
+    <Message Importance="high" Text="Deployed $(TargetFileName) to $(DeployPath)" />
+  </Target>
+
+</Project>

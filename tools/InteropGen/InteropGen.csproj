@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Runs Il2CppInterop the way MelonLoader does. Used by scripts/generate-interop.sh. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RollForward>Major</RollForward>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Il2CppInterop.Generator" HintPath="$(MelonLoaderPath)/Il2CppInterop.Generator.dll" />
+    <Reference Include="Il2CppInterop.Common" HintPath="$(MelonLoaderPath)/Il2CppInterop.Common.dll" />
+    <Reference Include="AsmResolver" HintPath="$(MelonLoaderPath)/AsmResolver.dll" />
+    <Reference Include="AsmResolver.DotNet" HintPath="$(MelonLoaderPath)/AsmResolver.DotNet.dll" />
+    <Reference Include="AsmResolver.PE" HintPath="$(MelonLoaderPath)/AsmResolver.PE.dll" />
+    <Reference Include="AsmResolver.PE.File" HintPath="$(MelonLoaderPath)/AsmResolver.PE.File.dll" />
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions" HintPath="$(MelonLoaderPath)/Microsoft.Extensions.Logging.Abstractions.dll" />
+    <Reference Include="Iced" HintPath="$(MelonLoaderPath)/Iced.dll" />
+  </ItemGroup>
+</Project>
