@@ -13,7 +13,7 @@ namespace MorePlayers
     public class Core : MelonMod
     {
         public const string ModName = "MorePlayers";
-        public const string ModVersion = "0.1.0";
+        public const string ModVersion = "0.1.1";
 
         // Steam's own lobby member limit.
         internal const int MaxCap = 250;

@@ -62,11 +62,21 @@ namespace MorePlayers.Patches
         }
     }
 
-    // Lobby.CreateLobby and TryOpenInviteInterface both create the Steam lobby with maxPlayers = 4.
-    [HarmonyPatch(typeof(SteamLobbyService), nameof(SteamLobbyService.CreateLobby))]
-    internal static class CreateLobbyPatch
+    // Lobby.CreateLobby and TryOpenInviteInterface both create the Steam lobby with maxPlayers = 4. Raise the
+    // member limit once Steam reports the lobby, which covers every way of creating one. Not a prefix on
+    // SteamLobbyService.CreateLobby: it compiles to a 12-byte jump stub, too small to hook safely.
+    [HarmonyPatch(typeof(SteamLobbyService), nameof(SteamLobbyService.OnLobbyCreated))]
+    internal static class OnLobbyCreatedPatch
     {
-        private static void Prefix(ref int maxPlayers) => maxPlayers = Core.Cap;
+        private static void Postfix(SteamLobbyService __instance)
+        {
+            try
+            {
+                if (__instance._lobbyID != 0)
+                    SteamMatchmaking.SetLobbyMemberLimit(__instance._lobbySteamID, Core.Cap);
+            }
+            catch (Exception e) { PlayerCap.LogFailureOnce(e); }
+        }
     }
 
     // UpdateLobbyMembers fills _players (sized 4 by the game) from Steam's member list with no length check.
@@ -126,12 +136,13 @@ namespace MorePlayers.Patches
     }
 
     // The Steam transport's client limit is set in the scene; make sure it fits the cap before the server starts.
-    [HarmonyPatch(typeof(FishySteamworks), nameof(FishySteamworks.StartConnection))]
-    internal static class StartConnectionPatch
+    // StartServer passes _maximumClients to the server socket. Not StartConnection: it's a 23-byte stub that
+    // opens with a short branch, which the native hook can't relocate safely (it crashed the game on hosting).
+    [HarmonyPatch(typeof(FishySteamworks), nameof(FishySteamworks.StartServer))]
+    internal static class StartServerPatch
     {
-        private static void Prefix(FishySteamworks __instance, bool server)
+        private static void Prefix(FishySteamworks __instance)
         {
-            if (!server) return;
             try { PlayerCap.RaiseTransportLimit(__instance); }
             catch (Exception e) { PlayerCap.LogFailureOnce(e); }
         }
